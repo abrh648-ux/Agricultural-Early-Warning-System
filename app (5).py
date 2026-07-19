@@ -107,6 +107,7 @@ This application predicts food security risk using:
 Country: Ethiopia
 """
 )
+st.sidebar.markdown("---")
 # =====================================================
 # HOME PAGE
 # =====================================================
@@ -143,7 +144,7 @@ This dashboard helps predict food security risk using machine learning and provi
     col1.metric("Records", len(df))
     col2.metric("Regions", df["Region"].nunique())
     col3.metric("Crop Types", df["crop type"].nunique())
-st.sidebar.markdown("---")
+
 # =====================================================
 # DATASET PAGE
 # =====================================================
