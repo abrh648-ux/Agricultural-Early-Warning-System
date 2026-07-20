@@ -339,12 +339,20 @@ elif page == "🔍 Explainable AI":
     st.subheader(f"Why is {cur_region} — {cur_crop} predicted as {RISK_NAMES[xgb_pred]}?")
     shap_vals = explainer.shap_values(inp)
 
+        expected  = explainer.expected_value
     if isinstance(shap_vals, list):
         sv = shap_vals[xgb_pred][0]
-        ev = explainer.expected_value[xgb_pred]
+        ev = float(expected[xgb_pred]) if hasattr(expected, '__len__') else float(expected)
+    elif hasattr(shap_vals, 'ndim') and shap_vals.ndim == 3:
+        sv = shap_vals[0, xgb_pred, :]
+        ev = float(expected[xgb_pred]) if hasattr(expected, '__len__') else float(expected)
+    elif hasattr(shap_vals, 'ndim') and shap_vals.ndim == 2:
+        sv = shap_vals[0]
+        ev = float(expected[xgb_pred]) if hasattr(expected, '__len__') else float(expected)
     else:
-        sv = shap_vals[0] if shap_vals.ndim > 1 else shap_vals
-        ev = float(explainer.expected_value)
+        sv = shap_vals
+        ev = float(expected[0]) if hasattr(expected, '__len__') else float(expected)
+
 
     explanation = shap.Explanation(
         values=sv,
